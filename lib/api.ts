@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { type Note } from '../types/note';
-
+import { type NoteTag } from '../types/note';
 interface FetchNotesParams {
   page: number;
   perPage?: number;
@@ -15,6 +15,14 @@ interface CreateNoteDto {
   title: string;
   content: string;
   tag: string;
+}
+interface NoteId {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  tag: NoteTag;
 }
 const NEXT_PUBLIC_NOTEHUB_TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
@@ -40,5 +48,9 @@ export const createNote = async (note: CreateNoteDto): Promise<Note> => {
 };
 export const deleteNote = async (id: string): Promise<Note> => {
   const { data } = await api.delete<Note>(`/notes/${id}`);
+  return data;
+};
+export const getSingleNote = async (id: string): Promise<NoteId> => {
+  const { data } = await api.get<NoteId>(`/notes/${id}`);
   return data;
 };
