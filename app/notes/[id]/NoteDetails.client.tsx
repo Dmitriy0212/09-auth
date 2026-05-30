@@ -1,21 +1,18 @@
 'use client';
+
 import css from './NoteDetails.module.css';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import { getSingleNote } from '@/lib/api';
+type Note = {
+  title: string;
+  tag: string;
+  content: string;
+  createdAt: string;
+};
 
-export default function NoteDetailsClient() {
-  const { id } = useParams<{ id: string }>();
+type Props = {
+  data: Note;
+};
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['note', id],
-    queryFn: () => getSingleNote(id),
-    refetchOnMount: false,
-  });
-
-  if (isLoading) return <p>Loading, please wait...</p>;
-  if (error) return <p>Something went wrong.</p>;
-
+export default function NoteDetails({ data }: Props) {
   return (
     <div className={css.container}>
       <div className={css.item}>

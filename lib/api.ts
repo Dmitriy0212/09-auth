@@ -5,10 +5,12 @@ interface FetchNotesParams {
   page: number;
   perPage?: number;
   search?: string;
+  tag?: string;
 }
 
 interface NotesResponse {
   notes: Note[];
+  tegs?: NoteTag[];
   totalPages: number;
 }
 interface CreateNoteDto {
@@ -32,7 +34,6 @@ export const fetchNotes = async (
   const { data } = await api.get<NotesResponse>('/notes', {
     params,
   });
-
   return data;
 };
 export const createNote = async (note: CreateNoteDto): Promise<Note> => {

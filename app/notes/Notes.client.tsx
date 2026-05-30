@@ -12,7 +12,7 @@ import NoteList from '../../components/NoteList/NoteList';
 import { useDebouncedCallback } from 'use-debounce';
 import { Toaster } from 'react-hot-toast';
 
-function App() {
+function App({ tag }: { tag?: string }) {
   const [createNoteThis, setCreateNoteThis] = useState(false);
   const [input, setInput] = useState('');
   const [querySe, setQuery] = useState('');
@@ -25,6 +25,7 @@ function App() {
         page,
         search: querySe || undefined,
         perPage: 12,
+        tag: tag || undefined,
       }),
     placeholderData: keepPreviousData,
   });
@@ -42,6 +43,9 @@ function App() {
   };
 
   const totalPages = data?.totalPages ?? 0;
+  const notes = data?.notes ?? [];
+
+  const isEmpty = isSuccess && notes.length === 0;
 
   return (
     <div className={css.app}>
@@ -64,8 +68,15 @@ function App() {
         </button>
       </header>
 
-      {!isLoading && !isFetching && isSuccess && data.notes.length > 0 && (
-        <NoteList notes={data.notes} />
+      {isEmpty ? (
+        <p>
+          {tag || querySe ? 'No notes found for this filter' : 'No notes yet'}
+        </p>
+      ) : (
+        !isLoading &&
+        !isFetching &&
+        isSuccess &&
+        data.notes.length > 0 && <NoteList notes={data.notes} />
       )}
 
       <Toaster position="top-center" reverseOrder={false} />
