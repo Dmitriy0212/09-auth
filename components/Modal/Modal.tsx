@@ -14,7 +14,8 @@ const Modal = ({ children }: Props) => {
   return (
     <div onClick={close} className={css.backdrop}>
       <div className={css.modal}>
-        {children}
+        <h2>ывмвым</h2>
+        <p>ывмпвапм</p>
         <button onClick={close}>Close</button>
       </div>
     </div>

@@ -5,7 +5,6 @@ import { useId } from 'react';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../lib/api';
-import { useRouter } from 'next/router';
 
 interface NoteFormValues {
   title: string;
