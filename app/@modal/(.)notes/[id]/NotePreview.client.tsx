@@ -1,15 +1,10 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import css from './NotePreview.module.css';
 import { useQuery } from '@tanstack/react-query';
 import { getSingleNote } from '@/lib/api';
-type Note = {
-  title: string;
-  tag: string;
-  content: string;
-  createdAt: string;
-};
+import Modal from '../../../../components/Modal/Modal';
+import NoteDetailsClient from '../../../notes/[id]/NoteDetails.client';
 
 export default function NotePreviewClient() {
   const { id } = useParams<{ id: string }>();
@@ -23,15 +18,8 @@ export default function NotePreviewClient() {
   if (isLoading) return <p>Loading, please wait...</p>;
   if (error) return <p>Something went wrong.</p>;
   return (
-    <div className={css.container}>
-      <div className={css.item}>
-        <div className={css.header}>
-          <h2>{data?.title}</h2>
-        </div>
-        <p className={css.tag}>{data?.tag}</p>
-        <p className={css.content}>{data?.content}</p>
-        <p className={css.date}>{data?.createdAt}</p>
-      </div>
-    </div>
+    <Modal>
+      <NoteDetailsClient />
+    </Modal>
   );
 }

@@ -1,5 +1,4 @@
 import { getSingleNote } from '@/lib/api';
-import Modal from '../../../../components/Modal/Modal';
 import NotePreviewClient from '../[id]/NotePreview.client';
 import {
   HydrationBoundary,
@@ -21,9 +20,7 @@ const NotePreview = async ({ params }: Props) => {
   });
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Modal>
-        <NotePreviewClient />
-      </Modal>
+      <NotePreviewClient />
     </HydrationBoundary>
   );
 };
