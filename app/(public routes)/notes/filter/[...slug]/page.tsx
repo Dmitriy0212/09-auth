@@ -1,5 +1,5 @@
 import css from '../../Notes.module.css';
-import { fetchNotes } from '../../../../lib/api';
+import { fetchNotes } from '../../../../../lib/api';
 import NotesClient from '../../Notes.client';
 import {
   HydrationBoundary,

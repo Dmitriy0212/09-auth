@@ -9,10 +9,10 @@ type Note = {
 };
 
 type Props = {
-  data: Note;
+  data?: Note;
 };
 
-export default function NoteDetails({ data }: Props) {
+export default function NoteDetailsClient({ data }: Props) {
   return (
     <div className={css.container}>
       <div className={css.item}>
