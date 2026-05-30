@@ -5,18 +5,18 @@ interface FetchNotesParams {
   page: number;
   perPage?: number;
   search?: string;
-  tag?: string;
+  tag?: NoteTag[];
 }
 
 interface NotesResponse {
   notes: Note[];
-  tegs?: NoteTag[];
+  teg?: NoteTag[];
   totalPages: number;
 }
 interface CreateNoteDto {
   title: string;
   content: string;
-  tag: string;
+  tag?: NoteTag[];
 }
 
 const NEXT_PUBLIC_NOTEHUB_TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;

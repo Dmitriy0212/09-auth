@@ -1,10 +1,7 @@
-'use client';
 import Link from 'next/link';
 import css from './SidebarNotes.module.css';
-interface SidebarNotesProps {
-  tag?: string[];
-}
-function SidebarNotes(tag: SidebarNotesProps) {
+
+function SidebarNotes() {
   return (
     <div>
       <ul className={css.menuList}>

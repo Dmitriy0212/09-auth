@@ -11,21 +11,24 @@ import { fetchNotes } from '../../../../lib/api';
 import NoteList from '../../../../components/NoteList/NoteList';
 import { useDebouncedCallback } from 'use-debounce';
 import { Toaster } from 'react-hot-toast';
-
-function App({ tag }: { tag?: string }) {
+import { NoteTag } from '@/types/note';
+type Props = {
+  tag?: NoteTag;
+};
+function App({ tag }: Props) {
   const [createNoteThis, setCreateNoteThis] = useState(false);
   const [input, setInput] = useState('');
   const [querySe, setQuery] = useState('');
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError, isSuccess, isFetching } = useQuery({
-    queryKey: ['notes', page, querySe],
+    queryKey: ['notes', { page, querySe, tag }],
     queryFn: () =>
       fetchNotes({
         page,
         search: querySe || undefined,
         perPage: 12,
-        tag: tag || undefined,
+        tag: tag ? [tag] : undefined,
       }),
     placeholderData: keepPreviousData,
   });
