@@ -82,7 +82,7 @@ function App({ tag }: { tag?: string }) {
       <Toaster position="top-center" reverseOrder={false} />
 
       {createNoteThis && (
-        <Modal onClose={closeModal}>
+        <Modal>
           <NoteForm onClose={closeModal} />
         </Modal>
       )}
