@@ -1,6 +1,6 @@
 import { getSingleNote } from '@/lib/api';
 import Modal from '../../../../components/Modal/Modal';
-import NoteDetails from '../../../../app/notes/[id]/NoteDetails.client';
+import NotePreviewClient from '../[id]/NotePreview.client';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -10,7 +10,7 @@ const NotePreview = async ({ params }: Props) => {
   const note = await getSingleNote(id);
   return (
     <Modal>
-      <NoteDetails data={note} />
+      <NotePreviewClient data={note} />
     </Modal>
   );
 };
