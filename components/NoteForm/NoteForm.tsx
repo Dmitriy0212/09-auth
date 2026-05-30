@@ -5,11 +5,11 @@ import { useId } from 'react';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../lib/api';
-
+import { NoteTag } from '@/types/note';
 interface NoteFormValues {
   title: string;
   content: string;
-  tag: string;
+  tag: NoteTag;
 }
 
 interface NoteFormProps {
@@ -52,7 +52,10 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     actions: FormikHelpers<NoteFormValues>
   ) => {
     try {
-      await mutation.mutateAsync(values);
+      await mutation.mutateAsync({
+        ...values,
+        tag: [values.tag],
+      });
 
       actions.resetForm();
     } catch (error) {
