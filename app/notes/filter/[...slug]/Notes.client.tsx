@@ -1,5 +1,5 @@
 'use client';
-import 'modern-normalize';
+
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import css from './Notes.module.css';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -15,13 +15,12 @@ import Link from 'next/link';
 type Props = {
   tag?: NoteTag;
 };
-function App({ tag }: Props) {
-  const [createNoteThis, setCreateNoteThis] = useState(false);
+function Notes({ tag }: Props) {
   const [input, setInput] = useState('');
   const [querySe, setQuery] = useState('');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError, isSuccess, isFetching } = useQuery({
+  const { data, isLoading, isSuccess, isFetching } = useQuery({
     queryKey: ['notes', { page, querySe, tag }],
     queryFn: () =>
       fetchNotes({
@@ -36,14 +35,6 @@ function App({ tag }: Props) {
   const debouncedSetQuery = useDebouncedCallback((value: string) => {
     setQuery(value);
   }, 500);
-
-  const openModal = () => {
-    setCreateNoteThis(true);
-  };
-
-  const closeModal = () => {
-    setCreateNoteThis(false);
-  };
 
   const totalPages = data?.totalPages ?? 0;
   const notes = data?.notes ?? [];
@@ -86,4 +77,4 @@ function App({ tag }: Props) {
   );
 }
 
-export default App;
+export default Notes;

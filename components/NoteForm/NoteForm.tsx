@@ -15,32 +15,15 @@ type NoteFormValues = {
   tag: NoteTag;
 };
 
-type CounterStore = {
-  count: NoteFormValues;
-  increment: () => void;
-};
 const initialValues: NoteFormValues = {
   title: '',
   content: '',
   tag: 'Todo',
 };
 
-const NoteFormSchema = Yup.object().shape({
-  title: Yup.string()
-    .min(3, 'Title must be at least 3 characters')
-    .max(50, 'Title is too long')
-    .required('Title is required'),
-
-  content: Yup.string().max(500, 'Content must be less than 500 characters'),
-
-  tag: Yup.string()
-    .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'])
-    .required('Tag is required'),
-});
-
 export default function NoteForm() {
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState(initialValues);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
   const router = useRouter();
   const baseId = useId();
@@ -48,13 +31,14 @@ export default function NoteForm() {
 
   useEffect(() => {
     draft && setFormData(draft);
-  }, []);
+  }, [draft]);
   const handleChange = (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     const { name, value } = event.target;
+
     setFormData(prev => ({
       ...prev,
       [name]: value,

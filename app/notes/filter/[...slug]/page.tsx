@@ -11,19 +11,32 @@ import { NoteTag } from '@/types/note';
 type Props = {
   params: { slug: string[] };
 };
+type GenerateMetadataProps = {
+  params: Promise<{
+    slug: string[];
+  }>;
+};
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: GenerateMetadataProps): Promise<Metadata> {
   const { slug } = await params;
-  console.log('Generating metadata for filter:', slug);
   return {
-    title: `Note: ${slug}`,
-    description: `Note by: ${slug}`,
+    title: `Note: ${slug.join('/')}`,
+    description: `Note by: ${slug.join('/')}`,
     openGraph: {
-      title: `Note: ${slug}`,
-      description: `Note by: ${slug}`,
-      url: `/notes/filter/${slug}`,
+      title: `Note: ${slug.join('/')}`,
+      description: `Note by: ${slug.join('/')}`,
+      url: `/notes/filter/${slug.join('/')}`,
       siteName: 'NoteHub',
-      images: ['https://ac.goit.global/fullstack/react/notehub-og-meta.jpg'],
+      images: [
+        {
+          url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+          width: 1200,
+          height: 630,
+          alt: 'NoteHub',
+        },
+      ],
       type: 'article',
     },
   };
