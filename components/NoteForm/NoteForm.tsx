@@ -1,22 +1,24 @@
 'use client';
 import css from './NoteForm.module.css';
-import { Formik, Form, Field, type FormikHelpers, ErrorMessage } from 'formik';
-import { useId } from 'react';
+
+import { useId, useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../lib/api';
 import { type NoteTag } from '../../types/note';
-import { useParams, useRouter } from 'next/navigation';
-interface NoteFormValues {
+import { useRouter } from 'next/navigation';
+import { useNoteDraftStore } from '@/lib/store/noteStore';
+
+type NoteFormValues = {
   title: string;
   content: string;
   tag: NoteTag;
-}
+};
 
-/*interface NoteFormProps {
-  onClose: () => void;
-}*/
-
+type CounterStore = {
+  count: NoteFormValues;
+  increment: () => void;
+};
 const initialValues: NoteFormValues = {
   title: '',
   content: '',
@@ -37,92 +39,104 @@ const NoteFormSchema = Yup.object().shape({
 });
 
 export default function NoteForm() {
-  const { id } = useParams<{ id: string }>();
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState(initialValues);
+  const { draft, setDraft, clearDraft } = useNoteDraftStore();
   const router = useRouter();
-
+  const baseId = useId();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    draft && setFormData(draft);
+  }, []);
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = event.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    setDraft({
+      ...draft,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      clearDraft();
+      router.push('/notes/filter/all');
     },
   });
-
-  const handleSubmit = async (
-    values: NoteFormValues,
-    actions: FormikHelpers<NoteFormValues>
-  ) => {
-    try {
-      await mutation.mutateAsync(values);
-
-      actions.resetForm();
-    } catch (error) {
-      console.error(error);
-    }
+  const handleSubmit = (formData: FormData) => {
+    const values = Object.fromEntries(formData) as NoteFormValues;
+    mutation.mutate(values);
   };
-
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={NoteFormSchema}
-      onSubmit={handleSubmit}>
-      <Form className={css.form}>
-        <div className={css.formGroup}>
-          <label htmlFor={`${router}-title`}>Title</label>
-          <Field
-            id={`${router}-title`}
-            type="text"
-            name="title"
-            className={css.input}
-          />
-          <ErrorMessage name="title" component="span" className={css.error} />
-        </div>
+    <form className={css.form} action={handleSubmit}>
+      <div className={css.formGroup}>
+        <label htmlFor={`${baseId}-title`}>Title</label>
 
-        <div className={css.formGroup}>
-          <label htmlFor={`${router}-content`}>Content</label>
-          <Field
-            as="textarea"
-            id={`${router}-content`}
-            name="content"
-            rows={8}
-            className={css.textarea}
-          />
-          <ErrorMessage name="content" component="span" className={css.error} />
-        </div>
+        <input
+          id={`${baseId}-title`}
+          type="text"
+          name="title"
+          className={css.input}
+          value={formData.title}
+          onChange={handleChange}
+        />
+      </div>
 
-        <div className={css.formGroup}>
-          <label htmlFor={`${router}-tag`}>Tag</label>
-          <Field
-            as="select"
-            id={`${router}-tag`}
-            name="tag"
-            className={css.select}>
-            <option value="Todo">Todo</option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
-            <option value="Meeting">Meeting</option>
-            <option value="Shopping">Shopping</option>
-          </Field>
-          <ErrorMessage name="tag" component="span" className={css.error} />
-        </div>
+      <div className={css.formGroup}>
+        <label htmlFor={`${baseId}-content`}>Content</label>
 
-        <div className={css.actions}>
-          <button
-            type="button"
-            className={css.cancelButton}
-            onClick={() => router.back()}>
-            Cancel
-          </button>
+        <textarea
+          id={`${baseId}-content`}
+          name="content"
+          rows={8}
+          className={css.textarea}
+          value={formData.content}
+          onChange={handleChange}
+        />
+      </div>
 
-          <button
-            type="submit"
-            className={css.submitButton}
-            disabled={mutation.isPending}>
-            {mutation.isPending ? 'Creating...' : 'Create note'}
-          </button>
-        </div>
-      </Form>
-    </Formik>
+      <div className={css.formGroup}>
+        <label htmlFor={`${baseId}-tag`}>Tag</label>
+
+        <select
+          id={`${baseId}-tag`}
+          name="tag"
+          className={css.select}
+          value={formData.tag}
+          onChange={handleChange}>
+          <option value="Todo">Todo</option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Shopping">Shopping</option>
+        </select>
+      </div>
+
+      <div className={css.actions}>
+        <button
+          type="button"
+          className={css.cancelButton}
+          onClick={() => router.back()}>
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          className={css.submitButton}
+          disabled={mutation.isPending}>
+          {mutation.isPending ? 'Creating...' : 'Create note'}
+        </button>
+      </div>
+    </form>
   );
 }
