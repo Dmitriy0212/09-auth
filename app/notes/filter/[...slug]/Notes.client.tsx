@@ -4,14 +4,13 @@ import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import css from './Notes.module.css';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
-import Modal from '../../../../components/Modal/Modal';
-import NoteForm from '../../../../components/NoteForm/NoteForm';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { fetchNotes } from '../../../../lib/api';
 import NoteList from '../../../../components/NoteList/NoteList';
 import { useDebouncedCallback } from 'use-debounce';
 import { Toaster } from 'react-hot-toast';
 import { NoteTag } from '@/types/note';
+import Link from 'next/link';
 
 type Props = {
   tag?: NoteTag;
@@ -66,10 +65,9 @@ function App({ tag }: Props) {
         {isSuccess && totalPages > 1 && (
           <Pagination totalPages={totalPages} page={page} setPage={setPage} />
         )}
-
-        <button className={css.button} onClick={openModal}>
+        <Link className={css.button} href="/notes/action/create">
           Create note +
-        </button>
+        </Link>
       </header>
 
       {isEmpty ? (
@@ -84,12 +82,6 @@ function App({ tag }: Props) {
       )}
 
       <Toaster position="top-center" reverseOrder={false} />
-
-      {createNoteThis && (
-        <Modal onClose={closeModal}>
-          <NoteForm onClose={closeModal} />
-        </Modal>
-      )}
     </div>
   );
 }

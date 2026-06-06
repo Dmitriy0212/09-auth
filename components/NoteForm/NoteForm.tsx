@@ -1,3 +1,4 @@
+'use client';
 import css from './NoteForm.module.css';
 import { Formik, Form, Field, type FormikHelpers, ErrorMessage } from 'formik';
 import { useId } from 'react';
@@ -5,15 +6,16 @@ import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../lib/api';
 import { type NoteTag } from '../../types/note';
+import { useParams, useRouter } from 'next/navigation';
 interface NoteFormValues {
   title: string;
   content: string;
   tag: NoteTag;
 }
 
-interface NoteFormProps {
+/*interface NoteFormProps {
   onClose: () => void;
-}
+}*/
 
 const initialValues: NoteFormValues = {
   title: '',
@@ -34,15 +36,16 @@ const NoteFormSchema = Yup.object().shape({
     .required('Tag is required'),
 });
 
-export default function NoteForm({ onClose }: NoteFormProps) {
-  const baseId = useId();
+export default function NoteForm() {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      onClose();
     },
   });
 
@@ -66,9 +69,9 @@ export default function NoteForm({ onClose }: NoteFormProps) {
       onSubmit={handleSubmit}>
       <Form className={css.form}>
         <div className={css.formGroup}>
-          <label htmlFor={`${baseId}-title`}>Title</label>
+          <label htmlFor={`${router}-title`}>Title</label>
           <Field
-            id={`${baseId}-title`}
+            id={`${router}-title`}
             type="text"
             name="title"
             className={css.input}
@@ -77,10 +80,10 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         </div>
 
         <div className={css.formGroup}>
-          <label htmlFor={`${baseId}-content`}>Content</label>
+          <label htmlFor={`${router}-content`}>Content</label>
           <Field
             as="textarea"
-            id={`${baseId}-content`}
+            id={`${router}-content`}
             name="content"
             rows={8}
             className={css.textarea}
@@ -89,10 +92,10 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         </div>
 
         <div className={css.formGroup}>
-          <label htmlFor={`${baseId}-tag`}>Tag</label>
+          <label htmlFor={`${router}-tag`}>Tag</label>
           <Field
             as="select"
-            id={`${baseId}-tag`}
+            id={`${router}-tag`}
             name="tag"
             className={css.select}>
             <option value="Todo">Todo</option>
@@ -105,7 +108,10 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         </div>
 
         <div className={css.actions}>
-          <button type="button" className={css.cancelButton} onClick={onClose}>
+          <button
+            type="button"
+            className={css.cancelButton}
+            onClick={() => router.back()}>
             Cancel
           </button>
 
