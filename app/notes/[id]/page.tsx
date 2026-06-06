@@ -20,12 +20,13 @@ export async function generateMetadata({
   params,
 }: GenerateMetadataProps): Promise<Metadata> {
   const { id } = await params;
+  const note = await getSingleNote(id);
   return {
-    title: `Note: ${id}`,
-    description: `Note by: ${id}`,
+    title: `${note.title}`,
+    description: `${note.content.slice(0, 100)}...`,
     openGraph: {
-      title: `Note: ${id}`,
-      description: `Note by: ${id}`,
+      title: `${note.title}`,
+      description: `${note.content.slice(0, 100)}...`,
       url: `/notes/filter/${id}`,
       siteName: 'NoteHub',
       images: [
