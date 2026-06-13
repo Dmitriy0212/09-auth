@@ -40,7 +40,7 @@ interface updateRequest {
 const NEXT_PUBLIC_NOTEHUB_TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://09-auth-e90vn8slz-dmitriy0212s-projects.vercel.app/api',
   withCredentials: true,
 });
 
