@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { getSingleNote } from '@/lib/api';
 import type { Metadata } from 'next';
-import NotePreviewClient from '../../@modal/(.)notes/[id]/NotePreview.client';
+import NotePreviewClient from '../../../@modal/(.)notes/[id]/NotePreview.client';
 
 type Props = {
   params: Promise<{ id: string }>;
