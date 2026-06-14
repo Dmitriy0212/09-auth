@@ -1,7 +1,7 @@
 import { type Note } from '../../types/note';
 import { type NoteTag } from '../../types/note';
 import { type User } from '../../types/user';
-import { api } from '../api';
+import { api } from './api';
 interface FetchNotesParams {
   page: number;
   perPage?: number;

@@ -1,5 +1,5 @@
 import { type Note } from '../../types/note';
-import { api } from '../api';
+import { api } from './api';
 import { cookies } from 'next/headers';
 import { type User } from '../../types/user';
 interface FetchNotesParams {
