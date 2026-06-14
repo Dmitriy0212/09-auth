@@ -1,7 +1,7 @@
 // lib/store/authStore.ts
 
 import { create } from 'zustand';
-import { type User } from '../api/clientApi';
+import { User } from '@/types/user';
 
 type AuthStore = {
   isAuthenticated: boolean;

@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import css from './ProfilePage.module.css';
-import { getMe, Users } from '@/lib/api/clientApi';
+import { getMe } from '@/lib/api/clientApi';
+import { User } from '@/types/user';
 import { useEffect, useState } from 'react';
 
 export default function Profile() {
-  const [userData, setUserData] = useState<Users | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     async function load() {

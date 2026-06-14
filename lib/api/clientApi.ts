@@ -1,23 +1,13 @@
-import axios from 'axios';
 import { type Note } from '../../types/note';
 import { type NoteTag } from '../../types/note';
-
+import { type User } from '../../types/user';
+import { api } from '../api';
 interface FetchNotesParams {
   page: number;
   perPage?: number;
   search?: string;
   tag?: string;
 }
-export type User = {
-  username: string;
-  email: string;
-  avatar: string;
-};
-export type Users = {
-  avatar: string;
-  email: string;
-  username: string;
-};
 interface NotesResponse {
   notes: Note[];
   totalPages: number;
@@ -37,13 +27,6 @@ interface updateRequest {
   avatar?: string;
 }
 
-const NEXT_PUBLIC_NOTEHUB_TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
-
-const api = axios.create({
-  baseURL: '/api',
-  withCredentials: true,
-});
-
 export const fetchNotes = async ({
   page,
   perPage,
@@ -58,19 +41,20 @@ export const fetchNotes = async ({
       tag: tag,
     },
   });
-  console.log('API Response:');
   return data;
 };
+
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const { data } = await api.get<Note>(`/notes/${id}`);
+  return data;
+};
+
 export const createNote = async (note: CreateNoteDto): Promise<Note> => {
   const { data } = await api.post<Note>('/notes', note);
   return data;
 };
 export const deleteNote = async (id: string): Promise<Note> => {
   const { data } = await api.delete<Note>(`/notes/${id}`);
-  return data;
-};
-export const fetchNoteById = async (id: string): Promise<Note> => {
-  const { data } = await api.get<Note>(`/notes/${id}`);
   return data;
 };
 
@@ -86,15 +70,16 @@ export const login = async (loginData: registerRequest) => {
 export const logout = async (): Promise<void> => {
   await api.post('/auth/logout');
 };
-export const checkSession = async (id: string): Promise<Note> => {
-  const { data } = await api.get<Note>(`/notes/${id}`);
+export const checkSession = async (): Promise<User> => {
+  const { data } = await api.get<User>('/auth/session');
   return data;
 };
 export const getMe = async () => {
-  const { data } = await api.get<Users>('/users/me');
+  console.log('Fetching user data...');
+  const { data } = await api.get<User>('/users/me');
   return data;
 };
 export const updateMe = async (updateData: updateRequest) => {
-  const { data } = await api.patch<Users>('/users/me', updateData);
+  const { data } = await api.patch<User>('/users/me', updateData);
   return data;
 };

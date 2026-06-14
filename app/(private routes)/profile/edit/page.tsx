@@ -3,7 +3,8 @@ import { useRouter } from 'next/navigation';
 import css from './EditProfilePage.module.css';
 import { updateMe } from '@/lib/api/clientApi';
 import { useState, useEffect } from 'react';
-import { getMe, Users } from '@/lib/api/clientApi';
+import { getMe } from '@/lib/api/clientApi';
+import { User } from '@/types/user';
 import { ApiError } from '../../../../types/note';
 import { useAuthStore } from '@/lib/store/authStore';
 import Image from 'next/image';
@@ -16,7 +17,7 @@ export default function Edit() {
   const [error, setError] = useState('');
   const router = useRouter();
   const setUser = useAuthStore(state => state.setUser);
-  const [userData, setUserData] = useState<Users | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     async function load() {
