@@ -14,12 +14,12 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: '08-zustand',
+  title: '09-auth',
   description: 'Application for creating and managing notes',
   openGraph: {
-    title: '08-zustand',
+    title: '09-auth',
     description: 'Application for creating and managing notes',
-    url: 'https://08-zustand-beryl-zeta.vercel.app/',
+    url: 'https://09-auth-seven-sandy.vercel.app/',
     images: [
       {
         url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
