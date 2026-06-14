@@ -17,14 +17,12 @@ export type CreateNoteDto = {
   content: string;
   tag: NoteTag;
 };
-interface registerRequest {
+interface RegisterRequest {
   email: string;
   password: string;
 }
-interface updateRequest {
-  username?: string;
-  email?: string;
-  avatar?: string;
+interface UpdateRequest {
+  username: string;
 }
 
 export const fetchNotes = async ({
@@ -58,11 +56,13 @@ export const deleteNote = async (id: string): Promise<Note> => {
   return data;
 };
 
-export const register = async (registerData: registerRequest) => {
+export const register = async (
+  registerData: RegisterRequest
+): Promise<User> => {
   const { data } = await api.post<User>('/auth/register', registerData);
   return data;
 };
-export const login = async (loginData: registerRequest) => {
+export const login = async (loginData: RegisterRequest): Promise<User> => {
   const { data } = await api.post<User>('/auth/login', loginData);
   return data;
 };
@@ -74,11 +74,11 @@ export const checkSession = async (): Promise<User> => {
   const { data } = await api.get<User>('/auth/session');
   return data;
 };
-export const getMe = async () => {
+export const getMe = async (): Promise<User> => {
   const { data } = await api.get<User>('/users/me');
   return data;
 };
-export const updateMe = async (updateData: updateRequest) => {
+export const updateMe = async (updateData: UpdateRequest): Promise<User> => {
   const { data } = await api.patch<User>('/users/me', updateData);
   return data;
 };

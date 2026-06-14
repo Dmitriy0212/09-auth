@@ -1,49 +1,31 @@
-'use client';
+import type { Metadata } from 'next';
+import { getMe } from '@/lib/api/serverApi';
+import ProfileClient from './ProfileClient';
 
-import Link from 'next/link';
-import css from './ProfilePage.module.css';
-import { getMe } from '@/lib/api/clientApi';
-import { User } from '@/types/user';
-import { useEffect, useState } from 'react';
+export async function generateMetadata(): Promise<Metadata> {
+  const user = await getMe();
 
-export default function Profile() {
-  const [userData, setUserData] = useState<User | null>(null);
+  return {
+    title: user.username,
+    description: `${user.username} profile page`,
+    openGraph: {
+      title: user.username,
+      description: `${user.username} profile`,
+      url: '/profile',
+      siteName: 'NoteHub',
+      images: [
+        {
+          url: user.avatar,
+          width: 1200,
+          height: 630,
+          alt: user.username,
+        },
+      ],
+      type: 'profile',
+    },
+  };
+}
 
-  useEffect(() => {
-    async function load() {
-      const data = await getMe();
-      setUserData(data);
-    }
-
-    load();
-  }, []);
-
-  return (
-    <main className={css.mainContent}>
-      <div className={css.profileCard}>
-        <div className={css.header}>
-          <h1 className={css.formTitle}>Profile Page</h1>
-
-          <Link href="/profile/edit" className={css.editProfileButton}>
-            Edit Profile
-          </Link>
-        </div>
-
-        <div className={css.avatarWrapper}>
-          <img
-            src={userData?.avatar}
-            alt="User Avatar"
-            width={120}
-            height={120}
-            className={css.avatar}
-          />
-        </div>
-
-        <div className={css.profileInfo}>
-          <p>Username: {userData?.username}</p>
-          <p>Email: {userData?.email}</p>
-        </div>
-      </div>
-    </main>
-  );
+export default function ProfilePage() {
+  return <ProfileClient />;
 }
