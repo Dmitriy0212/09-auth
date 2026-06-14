@@ -15,8 +15,6 @@ export async function GET() {
         Cookie: cookieStore.toString(),
       },
     });
-    console.log(`cookieStore.getAll()  ${cookieStore.getAll()}`);
-    console.log(`cookieStore.toString() ${cookieStore.toString()}`);
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
     if (isAxiosError(error)) {
