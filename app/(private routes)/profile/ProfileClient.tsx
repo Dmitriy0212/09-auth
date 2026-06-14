@@ -1,26 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import css from './ProfilePage.module.css';
-import { getMe } from '@/lib/api/clientApi';
 import { User } from '@/types/user';
 
-export default function ProfileClient() {
-  const [userData, setUserData] = useState<User | null>(null);
+type Props = {
+  user: User;
+};
 
-  useEffect(() => {
-    async function load() {
-      const data = await getMe();
-      setUserData(data);
-    }
-
-    load();
-  }, []);
-
+export default function ProfileClient({ user }: Props) {
   const avatar =
-    userData?.avatar?.trim() ||
+    user.avatar?.trim() ||
     'https://ac.goit.global/fullstack/react/default-avatar.jpg';
 
   return (
@@ -37,7 +28,7 @@ export default function ProfileClient() {
         <div className={css.avatarWrapper}>
           <Image
             src={avatar}
-            alt={userData?.username || 'User Avatar'}
+            alt={user.username}
             width={120}
             height={120}
             className={css.avatar}
@@ -45,8 +36,8 @@ export default function ProfileClient() {
         </div>
 
         <div className={css.profileInfo}>
-          <p>Username: {userData?.username}</p>
-          <p>Email: {userData?.email}</p>
+          <p>Username: {user.username}</p>
+          <p>Email: {user.email}</p>
         </div>
       </div>
     </main>

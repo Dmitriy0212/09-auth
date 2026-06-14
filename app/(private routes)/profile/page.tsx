@@ -26,6 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function ProfilePage() {
-  return <ProfileClient />;
+export default async function ProfilePage() {
+  const user = await getMe();
+
+  return <ProfileClient user={user} />;
 }
