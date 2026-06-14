@@ -12,6 +12,9 @@ interface NotesResponse {
   notes: Note[];
   totalPages: number;
 }
+interface checkSessionParams {
+  message: string;
+}
 export const fetchNotes = async ({
   page,
   perPage,
@@ -46,16 +49,17 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
 };
 export const checkSession = async () => {
   const cookieStore = await cookies();
-  const { data } = await api.get('/auth/session', {
+  const response = await api.get('/auth/session', {
     headers: {
       Cookie: cookieStore.toString(),
     },
   });
-  return data;
+
+  return response;
 };
 export const getMe = async () => {
   const cookieStore = await cookies();
-  const { data } = await api.get<User>('/users/me', {
+  const { data } = await api.get('/users/me', {
     headers: {
       Cookie: cookieStore.toString(),
     },

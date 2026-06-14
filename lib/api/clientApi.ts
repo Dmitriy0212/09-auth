@@ -75,7 +75,6 @@ export const checkSession = async (): Promise<User> => {
   return data;
 };
 export const getMe = async () => {
-  console.log('Fetching user data...');
   const { data } = await api.get<User>('/users/me');
   return data;
 };

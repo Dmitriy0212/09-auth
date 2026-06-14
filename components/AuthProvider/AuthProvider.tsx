@@ -18,14 +18,17 @@ const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
+      // Перевіряємо сесію
+      const isAuthenticated = await checkSession();
+      if (isAuthenticated) {
+        // Якщо сесія валідна — отримуємо користувача
         const user = await getMe();
-        setUser(user);
-      } catch (e) {
+        if (user) setUser(user);
+      } else {
+        // Якщо сесія невалідна — чистимо стан
         clearIsAuthenticated();
       }
     };
-
     fetchUser();
   }, [setUser, clearIsAuthenticated]);
 
